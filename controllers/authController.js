@@ -134,7 +134,7 @@ exports.forgetPassword = async (req, res) => {
         await user.save();
 
         // Create a password reset link using the generated token
-        const restlink = `http://localhost:3000/reset-password/${token}`
+        const restlink = `https://event-management-web.netlify.app/reset-password/${token}`
 
         // Send the reset link to the user's email (to, subject, text)
         await sendMail(user.email, "Password Reset", `Reset Your Password: ${restlink}`);
