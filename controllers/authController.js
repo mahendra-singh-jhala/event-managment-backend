@@ -26,13 +26,13 @@ exports.register = async (req, res) => {
     }
 
     try {
-         // Check if the user name already exists
-         const existingUser  = await User.findOne({ $or: [{ username }, { email }] });
-         if (existingUser ) {
-             return res.status(409).json({
-                 message: existingUser.username === username ? "Username already exists" : "User  email already exists"
-             });
-         }
+        // Check if the user name already exists
+        const existingUser = await User.findOne({ $or: [{ username }, { email }] });
+        if (existingUser) {
+            return res.status(409).json({
+                message: existingUser.username === username ? "Username already exists" : "User  email already exists"
+            });
+        }
 
         // hash password
         const hashPassword = await bcrypt.hash(password, 10);
@@ -92,13 +92,15 @@ exports.login = async (req, res) => {
         const token = jwt.sign({ userId: user._id, email: user.email, role: user.role }, process.env.SECRET_KEY, { expiresIn: "7D" })
 
         // return the token user
-        res.json({ 
+        res.json({
+            message: "Login Successfully",
             user: {
                 userId: user._id,
                 email: user.email,
                 role: user.role
             },
-            token })
+            token
+        })
 
     } catch (error) {
         res.status(500).json({
@@ -174,7 +176,7 @@ exports.resetPassword = async (req, res) => {
             });
         }
 
-        if(password !== confirmPassword) {
+        if (password !== confirmPassword) {
             return res.status(400).json({
                 error: 'Password doee not match'
             });
