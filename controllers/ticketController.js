@@ -2,6 +2,7 @@
 const Event = require("../models/event")
 const Ticket = require("../models/ticket")
 const SoldTicket = require("../models/soldTicket")
+const TicketDeleteConfemationMail = require("../nodemailer/ticketDelete")
 
 // create a tickets
 exports.createTicket = async (req, res) => {
@@ -91,10 +92,10 @@ exports.getTicketByUser = async (req, res) => {
 
 exports.cancelTicket = async (req, res) => {
     const ticketId = req.params.ticketId;
-    const userEmail = req.user.email;
+    const { email, paymentID } = req.body;
 
     try {
-        const cancelTicket = await SoldTicket.findOneAndDelete({ _id: ticketId, email: userEmail });
+        const cancelTicket = await SoldTicket.findOneAndDelete({ _id: ticketId, email: email, paymentId: paymentID });
 
         if (!cancelTicket) {
             return res.status(404).json({
@@ -105,6 +106,8 @@ exports.cancelTicket = async (req, res) => {
         res.status(200).json({
             message: "ticket delete successfully"
         })
+
+        TicketDeleteConfemationMail(email)
 
     } catch (error) {
         res.status(500).json({

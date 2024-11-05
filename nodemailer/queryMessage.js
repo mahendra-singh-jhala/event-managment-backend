@@ -20,7 +20,7 @@ const queryMessage = async (to, subject, text) => {
 
     try {
         await transporter.sendMail(mailOption);
-        console.log("Mail sent to:", email);
+        console.log("Mail sent to:", to);
     } catch (error) {
         console.error("Error sending email:", error.message);
     }
