@@ -3,6 +3,8 @@ const Event = require("../models/event")
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const SoldTicket = require("../models/soldTicket")
+const updateEventMail = require("../nodemailer/updateEvent")
 
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(__dirname, 'uploads');
@@ -106,10 +108,31 @@ exports.updateEvent = async (req, res) => {
                 message: "Event not found"
             })
         }
+
+        const soldTicket = await SoldTicket.findOne({ eventId: req.params.id })
+
+        if (!soldTicket) {
+            return res.status(404).json({
+                message: "No tickets sold for this event"
+            });
+        }
+
+        const ticketEmail = soldTicket.map(ticket => ticket.email)
+
+        const subject = `Important Update: ${updateEvent.title} Schedule`
+        const text = `Dear Attendee,We wanted to let you know that the schedule for the event "${updateEvent.title}" has been updated. Here are the new details:${JSON.stringify(req.body)}.Please check the event page for more information.Best regards,The Event Team`;
+
+        const AllEmail = ticketEmail.map(email => 
+            updateEventMail(email, subject, text)
+        )
+
+        await Promise.all(AllEmail)
+
         res.status(200).json({
             message: "Update successfully",
             updateEvent
         })
+
     } catch (error) {
         res.status(500).json({
             message: "Error updating the Event",
