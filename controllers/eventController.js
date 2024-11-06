@@ -117,12 +117,18 @@ exports.updateEvent = async (req, res) => {
             });
         }
 
-        const ticketEmail = soldTicket.map(ticket => ticket.email)
+        let ticketEmails = [];
+
+        if (soldTicket.tickets && soldTicket.tickets.length > 0) {
+            ticketEmails = soldTicket.tickets.map(ticket => ticket.email);
+        } else if (soldTicket.email) {
+            ticketEmails = [soldTicket.email];
+        }
 
         const subject = `Important Update: ${updateEvent.title} Schedule`
         const text = `Dear Attendee,We wanted to let you know that the schedule for the event "${updateEvent.title}" has been updated. Here are the new details:${JSON.stringify(req.body)}.Please check the event page for more information.Best regards,The Event Team`;
 
-        const AllEmail = ticketEmail.map(email => 
+        const AllEmail = ticketEmails.map(email => 
             updateEventMail(email, subject, text)
         )
 
