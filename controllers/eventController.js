@@ -126,7 +126,7 @@ exports.updateEvent = async (req, res) => {
         }
 
         const subject = `Important Update: ${updateEvent.title} Schedule`
-        const text = `Dear Attendee,We wanted to let you know that the schedule for the event "${updateEvent.title}" has been updated. Here are the new details:${JSON.stringify(req.body)}.Please check the event page for more information.Best regards,The Event Team`;
+        const text = `Dear Attendee,We wanted to let you know that the schedule for the event "${updateEvent.title}" has been updated.\n\n Here are the new details:\n\n${JSON.stringify(req.body)}.\n\nPlease check the event page for more information.Best regards,The Event Team`;
 
         const AllEmail = ticketEmails.map(email => 
             updateEventMail(email, subject, text)
