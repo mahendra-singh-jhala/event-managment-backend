@@ -112,8 +112,9 @@ exports.updateEvent = async (req, res) => {
         const soldTicket = await SoldTicket.findOne({ eventId: req.params.id })
 
         if (!soldTicket) {
-            return res.status(404).json({
-                message: "No tickets sold for this event"
+            return res.status(200).json({
+                message: "Event updated successfully, but no tickets sold so no emails were sent",
+                updateEvent
             });
         }
 

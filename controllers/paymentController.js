@@ -25,7 +25,7 @@ exports.payment = async (req, res) => {
             id: order.id,
             currency: order.currency,
             amount: order.amount,
-        });
+        })
     } catch (error) {
         res.status(500).json({ 
             message: 'Error creating order', 

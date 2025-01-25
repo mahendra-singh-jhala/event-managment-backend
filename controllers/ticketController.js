@@ -18,7 +18,7 @@ exports.createTicket = async (req, res) => {
         const ticket = new Ticket({ eventId, ticketTypes, price, quantity, title: event.title });
 
         await ticket.save();
-        res.status(201).json({
+        res.status(200).json({
             message: "Ticket create Succsessfully",
             ticket
         });

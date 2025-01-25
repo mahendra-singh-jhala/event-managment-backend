@@ -54,7 +54,6 @@ exports.register = async (req, res) => {
             error: error.message
         })
     }
-
 }
 
 
